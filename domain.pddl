@@ -2,53 +2,48 @@
 
 (define (domain isolation-chamber)
   (:requirements :strips :typing :fluents)
-  (:types block
+  (:types 
   patient room)
-  (:predicates (on ?x - block ?y - block)
-	       (ontable ?x - block)
-	       (clear ?x - block)
-	       (handempty)
+  (:predicates 
 		   (hvac-on)
 		   (light-on)
 		   (under-control)
-	       (holding ?x - block)
 		   (in ?patient1 - patient ?room1 -room)
 	       )
 
 (:functions
 	(temperature ?room1 - room)
-	(humidity)
+	(humidity ?room1 - room)
 	(motion)
 	(uv)
 	(battery)
+	(temperature-threshold-low)
+	(temperature-threshold-high)
+	(humidity-threshold-low)
+	(humidity-threshold-high)
 )
 
   (:action turn-off-hvac
 	     :parameters (?patient1 - patient ?room1 - room)
 	     :precondition (and 
 		 (in ?patient1 ?room1)
-		 (< (temperature ?room1) 24)) 
+		 (< (temperature ?room1) (temperature-threshold-low) )
+		 ) 
 	     :effect
 	     (and 
-		 ;(not (holding ?x))
-		  ; (clear ?x)
 		   (not(hvac-on))
 		   (under-control)
-		   ( decrease (temperature ?room1) 1)
-		   ;(ontable ?x)
 		   ))
 
   (:action turn-on-hvac
   	     :parameters (?patient1 - patient ?room1 - room)
 	     :precondition (and 
 		 (in ?patient1 ?room1)
-		 (> (temperature ?room1) 23))
+		 (> (temperature ?room1) (temperature-threshold-high) ))
      	:effect
 	     (and 
 			(hvac-on)
-		 	(under-control)
-			 ( increase (temperature ?room1) 1)
-			
+		 	(under-control)			
 			))
 
 

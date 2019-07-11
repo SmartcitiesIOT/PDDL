@@ -1,17 +1,22 @@
 
 (define (problem BLOCKS-4-0)
 (:domain isolation-chamber)
-(:objects D B A C - block
+(:objects 
 p1 - patient r1 - room)
 (:init 
-    (not(hvac-on))
-    (not(light-on))
     (in p1 r1)
-    (= (temperature r1) 25)
-    (= (humidity) 2 )
+
+    ;; Set the threshold values here
+    ( = (temperature-threshold-low) 15)
+    ( = (temperature-threshold-high) 23)
+    ( = (humidity-threshold-low) 0.5)
+    ( = (humidity-threshold-high) 10)
+
+    (= (temperature r1) 10)
+
+    (= (humidity r1) 12 )
     (= (motion) 0 ))
 (:goal (AND 
     (under-control)
-    (= (temperature r1) 28)
 ))
 )
