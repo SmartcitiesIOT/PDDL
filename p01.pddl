@@ -11,12 +11,16 @@ p1 - patient r1 - room)
     ( = (temperature-threshold-high) 23)
     ( = (humidity-threshold-low) 0.5)
     ( = (humidity-threshold-high) 10)
+    ( = (luminance-threshold-low) 0.5)
+    ( = (luminance-threshold-high) 10)
 
-    (= (temperature r1) 10)
-
-    (= (humidity r1) 12 )
+    ;; Set the current sensor readings here
+    (= (temperature r1) 17)
+    (= (humidity r1) 8 )
+    (= (luminance r1) 0.2 )
     (= (motion) 0 ))
 (:goal (AND 
-    (under-control)
+    (hvac-under-control)
+    (light-under-control)
 ))
 )
