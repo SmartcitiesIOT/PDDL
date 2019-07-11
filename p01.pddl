@@ -1,16 +1,23 @@
 (define (problem problem1)
+
   (:domain isolation-chamber)
+
   (:objects 
-    108 - room
-    patient1 - patient
+    abc - room
+    x - patient
     hvac alarm - actuator
-     humidity motion uv battery - sensor)
+    ;temperature humidity motion uv battery - sensor
+    )
   (:init 
-    (= (temperature-sensor) 29)
-    (= (humidity-sensor) 2)
+    (in x abc)
+    (room abc)
+    (= (hvac-on) 0)
+    (= (temperature) 29 )
+    (= (humidity) 2 )
+    (= (motion) 0 )
   )
   (:goal 
-  (= (temperature-sensor) 23)
+  (= (temperature) 23)
   )
 
   )
