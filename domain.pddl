@@ -1,18 +1,21 @@
 
-
 (define (domain isolation-chamber)
   (:requirements :strips :typing :fluents :equality)
   (:types 
   patient room)
   (:predicates 
-		   (hvac-on)
-		   (light-on)
-		   (shade-on)
-		   (record-on)
-		   (hvac-under-control)
+		   (temperature-control-on)
+		   (light-control-on)
+		   (humidity-control-on)
+		   (motion-alert-on)
+		   (uv-alert-on)
+		   
+		   (temperature-under-control)
 		   (light-under-control)
-		   (shade-under-control)
-		   (record-under-control)
+		   (humidity-under-control)
+		   (uv-under-control)
+		   (motion-under-control)
+		   
 		   (in ?patient1 - patient ?room1 -room)
 	       )
 
@@ -34,15 +37,47 @@
 	(motion-threshold-high)
 )
 
-  (:action turn-off-hvac
+  (:action turn-off-temperature-control
 	     :parameters (?patient1 - patient ?room1 - room)
 	     :precondition (and 
 		 	(in ?patient1 ?room1)
-		 ;(< (temperature ?room1) (temperature-threshold-low) )
 		 
 			( > (temperature ?room1) (temperature-threshold-low))
 		 	( < (temperature ?room1) (temperature-threshold-high))
+			
+		 )
 
+	     :effect
+	     (and 
+		   (not(temperature-control-on))
+		   (temperature-under-control)
+		   ))
+
+  (:action turn-on-temperature-control
+  	     :parameters (?patient1 - patient ?room1 - room)
+	     :precondition (and 
+		 (in ?patient1 ?room1)
+		 
+		 (or
+			 	( < (temperature ?room1) (temperature-threshold-low))
+		 		(> (temperature ?room1) (temperature-threshold-high))
+
+			) 
+
+		 )
+     	:effect
+	     (and 
+			(temperature-control-on)
+		 	(temperature-under-control)			
+			))
+
+
+
+  (:action turn-off-humidity-control
+	     :parameters (?patient1 - patient ?room1 - room)
+	     :precondition (and 
+		 	(in ?patient1 ?room1)
+		
 			( > (humidity ?room1) (humidity-threshold-low))
 		 	( < (humidity ?room1) (humidity-threshold-high))
 			
@@ -50,41 +85,37 @@
 
 	     :effect
 	     (and 
-		   (not(hvac-on))
-		   (hvac-under-control)
+		   (not(humidity-control-on))
+		   (humidity-under-control)
 		   ))
 
-  (:action turn-on-hvac
+  (:action turn-on-humidity-control
   	     :parameters (?patient1 - patient ?room1 - room)
 	     :precondition (and 
 		 (in ?patient1 ?room1)
-		 ;(> (temperature ?room1) (temperature-threshold-high) )
-		 
-		 (or
-			 	( < (temperature ?room1) (temperature-threshold-low))
-		 		(> (temperature ?room1) (temperature-threshold-high))
 
+		 (or
 		 		(< (humidity ?room1) (humidity-threshold-low))
 		 		(> (humidity ?room1) (humidity-threshold-high))
+
 			) 
-		 
 
 		 )
      	:effect
 	     (and 
-			(hvac-on)
-		 	(hvac-under-control)			
+			(humidity-control-on)
+		 	(humidity-under-control)			
 			))
 
-  (:action turn-on-light-adjust
+
+
+
+  (:action turn-on-light-control
   	     :parameters (?patient1 - patient ?room1 - room)
 	     :precondition (and 
 		 	(in ?patient1 ?room1)
 		 		 
 			(or
-			 	( < (luminance ?room1) (luminance-threshold-low))
-		 		(> (luminance ?room1) (luminance-threshold-high))
-
 		 		(< (luminance ?room1) (luminance-threshold-low))
 		 		(> (luminance ?room1) (luminance-threshold-high))
 			) 
@@ -93,32 +124,28 @@
 		 
      	:effect
 	     (and 
-			(light-on)
+			(light-control-on)
 		 	(light-under-control)			
 			))
  
-   (:action turn-off-light-adjust
+   (:action turn-off-light-control
   	     :parameters (?patient1 - patient ?room1 - room)
 	     :precondition (and 
 		 	(in ?patient1 ?room1)
 
 			( > (luminance ?room1) (luminance-threshold-low))
-		 	( < (luminance ?room1) (luminance-threshold-high))
-
-			( > (luminance ?room1) (luminance-threshold-low))
 		 	( < (luminance ?room1) (luminance-threshold-high))	 
 			
-
 		) 
 		 
      	:effect
 	     (and 
-			(not(light-on))
+			(not(light-control-on))
 		 	(light-under-control)			
 			))
 
 
-  (:action turn-on-shade
+  (:action turn-on-uv-alert
   	     :parameters (?patient1 - patient ?room1 - room)
 	     :precondition (and 
 		 	(in ?patient1 ?room1)
@@ -129,11 +156,11 @@
 		 
      	:effect
 	     (and 
-			(shade-on)
-		 	(shade-under-control)			
+			(uv-alert-on)
+		 	(uv-under-control)			
 			))
  
-   (:action turn-off-shade
+   (:action turn-off-uv-alert
   	     :parameters (?patient1 - patient ?room1 - room)
 	     :precondition (and 
 		 	(in ?patient1 ?room1)
@@ -144,11 +171,11 @@
 		 
      	:effect
 	     (and 
-			(not(shade-on))
-		 	(shade-under-control)			
+			(not(uv-alert-on))
+		 	(uv-under-control)			
 			))
 
-  (:action turn-on-record
+  (:action turn-on-motion-alert
   	     :parameters (?patient1 - patient ?room1 - room)
 	     :precondition (and 
 		 	(in ?patient1 ?room1)
@@ -159,11 +186,11 @@
 		 
      	:effect
 	     (and 
-			(record-on)
-		 	(record-under-control)			
+			(motion-alert-on)
+		 	(motion-under-control)			
 			))
  
-   (:action turn-off-record
+   (:action turn-off-motion-alert
   	     :parameters (?patient1 - patient ?room1 - room)
 	     :precondition (and 
 		 	(in ?patient1 ?room1)
@@ -174,8 +201,8 @@
 		 
      	:effect
 	     (and 
-			(not(record-on))
-		 	(record-under-control)			
+			(not(motion-alert-on))
+		 	(motion-under-control)			
 			))
 		
 )
