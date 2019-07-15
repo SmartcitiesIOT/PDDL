@@ -1,5 +1,5 @@
 
-(define (problem BLOCKS-4-0)
+(define (problem patient-monitor)
 (:domain isolation-chamber)
 (:objects 
 p1 - patient r1 - room)
@@ -16,9 +16,11 @@ p1 - patient r1 - room)
 
     ;; Set the current sensor readings here
     (= (temperature r1) 17)
-    (= (humidity r1) 8 )
-    (= (luminance r1) 0.2 )
-    (= (motion) 0 ))
+    (= (humidity r1) 8)
+    (= (luminance r1) 0.2)
+    (= (motion) 0)
+    (= (uv) 0.05)
+)
 (:goal (AND 
     (hvac-under-control)
     (light-under-control)
